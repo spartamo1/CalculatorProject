@@ -1,27 +1,53 @@
 package com.mosparta.calculator;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 // step2
 class Calculator {
+    private List<Double> history = new ArrayList<>();
+
     public double calculate(int num1, int num2, char operator) {
+        double result;
+
         switch (operator) {
             case '+':
-                return num1 + num2;
+                result = num1 + num2;
+                break;
             case '-':
-                return num1 - num2;
+                result = num1 - num2;
+                break;
             case '*':
-                return num1 * num2;
+                result = num1 * num2;
+                break;
             case '/':
                 if (num2 != 0) {
-                    return (double) num1 / num2;
+                    result = (double) num1 / num2;
+                    break;
                 } else {
                     throw new RuntimeException("0으로 나눌 수 없습니다");
                 }
             default:
                 throw new RuntimeException("알 수 없는 기호입니다");
         }
+
+        history.add(result);
+        return result;
+    }
+
+    public List<Double> getHistory() {
+        return history;
+    }
+
+    public void setHistory(List<Double> history) {
+        this.history = history;
+    }
+
+    public void deleteOldHistory() {
+        if (!this.history.isEmpty())
+            this.history.remove(0);
     }
 }
 
@@ -32,11 +58,22 @@ public class CalculatorStep2 {
 
         while (true) {
             try {
-                System.out.print("첫 번째 숫자 입력 (혹은 종료하려면 `exit`): ");
+                System.out.print("첫 번째 숫자 입력 (혹은 종료하려면 `exit` / history 전체 출력하려면 `all-history` / history 예전 데이터 삭제하려면 `pop`): ");
                 String fstInput = scanner.next();
 
                 if (fstInput.equals("exit"))
                     return;
+
+                if (fstInput.equals("all-history")) {
+                    System.out.println(calculator.getHistory());
+                    continue;
+                }
+
+                if (fstInput.equals("pop")) {
+                    calculator.deleteOldHistory();
+                    System.out.println("예전 데이터 삭제 완료");
+                    continue;
+                }
 
                 int num1 = Integer.parseInt(fstInput);
                 System.out.println();
