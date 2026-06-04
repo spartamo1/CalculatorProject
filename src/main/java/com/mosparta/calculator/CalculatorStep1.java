@@ -37,7 +37,7 @@ public class CalculatorStep1 {
                         break;
                     case '/':
                         if (num2 != 0) {
-                            System.out.println("Result: " + (num1 / num2));
+                            System.out.println("Result: " + ((double) num1 / num2));
                         } else {
                             System.out.println("Error: 0으로 나눌 수 없습니다");
                         }
