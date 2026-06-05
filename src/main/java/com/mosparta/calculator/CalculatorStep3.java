@@ -38,25 +38,27 @@ enum OperatorType {
     }
 }
 
-class ArithmeticCalculator {
+class ArithmeticCalculator<T extends Number> {
     private List<Double> history = new ArrayList<>();
 
-    public double calculate(int num1, int num2, OperatorType operator) {
+    public double calculate(T num1, T num2, OperatorType operator) {
         double result;
 
+        double num1val = num1.doubleValue();
+        double num2val = num2.doubleValue();
         switch (operator) {
             case ADD:
-                result = num1 + num2;
+                result = num1val + num2val;
                 break;
             case SUBTRACT:
-                result = num1 - num2;
+                result = num1val - num2val;
                 break;
             case MULTIPLY:
-                result = num1 * num2;
+                result = num1val * num2val;
                 break;
             case DIVIDE:
-                if (num2 != 0) {
-                    result = (double) num1 / num2;
+                if (num2val != 0) {
+                    result = num1val / num2val;
                     break;
                 } else {
                     throw new RuntimeException("0으로 나눌 수 없습니다");
@@ -78,19 +80,32 @@ class ArithmeticCalculator {
     }
 
     public void deleteOldHistory() {
-        if (!this.history.isEmpty())
-            this.history.remove(0);
+        if (!history.isEmpty())
+            history.remove(0);
+    }
+
+    public void printHistoryBiggerThan(double axis) {
+        history.stream()
+                .filter(value -> value > axis)
+                .forEach(System.out::println);
     }
 }
 
 public class CalculatorStep3 {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ArithmeticCalculator calculator = new ArithmeticCalculator();
+        ArithmeticCalculator<Integer> calculator = new ArithmeticCalculator<Integer>();
 
         while (true) {
             try {
-                System.out.print("첫 번째 숫자 입력 (혹은 종료하려면 `exit` / history 전체 출력하려면 `all-history` / history 예전 데이터 삭제하려면 `pop`): ");
+                System.out.print(
+                        "첫 번째 숫자 입력 " +
+                                "- 종료하려면 `exit`" +
+                                "- history 전체 출력하려면 `all-history`" +
+                                "- history 예전 데이터 삭제하려면 `pop`" +
+                                "- history 중 입력값보다 큰 값을 검색하려면 `bigger`" +
+                                ": "
+                );
                 String fstInput = scanner.next();
 
                 if (fstInput.equals("exit"))
@@ -104,6 +119,12 @@ public class CalculatorStep3 {
                 if (fstInput.equals("pop")) {
                     calculator.deleteOldHistory();
                     System.out.println("예전 데이터 삭제 완료");
+                    continue;
+                }
+
+                if (fstInput.equals("bigger")) {
+                    double axis = scanner.nextDouble();
+                    calculator.printHistoryBiggerThan(axis);
                     continue;
                 }
 
